@@ -1,0 +1,47 @@
+package com.inc.gtc.fire.bus.msg;
+
+import com.inc.gateway.flow.cmd.CmdAttrs;
+
+/**
+ * 短信消息
+ * @author courser
+ *
+ */
+public class RecvMessage extends AbstractMessage{
+
+	/**
+	 * 来源手机号码
+	 */
+	private String from;
+	
+	public RecvMessage()
+	{
+		
+	}
+	
+	public RecvMessage(String from,String content)
+	{
+		super(content);
+		this.from = from;
+	}
+	
+	public void setFrom(String from)
+	{
+		this.from = from;
+	}
+	
+
+	public String getFrom() {
+		return from;
+	}
+	
+	public void buildAttr(CmdAttrs attr)
+	{
+		super.buildAttr(attr);
+		if (attr.containsAttr("from"))
+			this.setFrom((String)attr.getAttr("from"));
+	}
+	
+
+
+}

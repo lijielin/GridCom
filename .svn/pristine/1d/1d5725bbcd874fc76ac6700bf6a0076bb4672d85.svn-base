@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="
+  http://www.springframework.org/schema/beans  
+  http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+  http://www.springframework.org/schema/context  
+  http://www.springframework.org/schema/context/spring-context-4.0.xsd
+ http://www.springframework.org/schema/tx 
+ http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+  http://www.springframework.org/schema/data/mongo  
+  http://www.springframework.org/schema/data/mongo/spring-mongo-1.0.xsd ">
+  
+    <bean id="gmDataSource"
+                class="com.mchange.v2.c3p0.ComboPooledDataSource"
+                destroy-method="close">
+                <property name="driverClass">
+                        <value>com.mysql.jdbc.Driver</value>
+                </property>
+                <property name="jdbcUrl">
+                        <value>jdbc:mysql://218.244.142.154:3306/gm?useUnicode=true</value>
+                </property>
+                <property name="user">
+                        <value>incar</value>
+                </property>
+                <property name="password">
+                        <value>incar2406</value>
+                </property> 
+                <property name="minPoolSize">
+                        <value>1</value>
+                </property>
+                <property name="maxPoolSize">
+                        <value>4</value>
+                </property>
+                <property name="maxIdleTime">
+                        <value>60</value>
+                </property>
+                <property name="acquireIncrement">
+                        <value>2</value>
+                </property>
+                <property name="idleConnectionTestPeriod">
+                        <value>60</value>
+                </property>
+        </bean>
+        	
+	<bean id="actDataSource" class="com.inc.gmgrid.db.ActDataSource">
+        <property name="defaultDataSource" ref="gmDataSource"></property>
+	</bean>
+	
+	<bean id="gmSessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean" lazy-init="true">
+		<property name="packagesToScan" value="com.inc.gm.domain" />
+		<property name="hibernateProperties">
+			<value>
+				hibernate.hbm2ddl.auto=none
+				hibernate.dialect=org.hibernate.dialect.MySQL5InnoDBDialect
+				hibernate.show_sql=false
+				hibernate.batch_size=20
+				hibernate.cache.use_second_level_cache=true
+				hibernate.cache.use_query_cache=true
+				hibernate.cache.provider_class=org.hibernate.cache.EhCacheProvider
+				hibernate.cache.region.factory_class=org.hibernate.cache.ehcache.SingletonEhCacheRegionFactory
+				hibernate.connection.autocommit=true
+				hibernate.current_session_context_class=org.springframework.orm.hibernate4.SpringSessionContext
+			</value>
+		</property>
+		<property name="dataSource">
+			<ref local="actDataSource" />
+		</property>
+	</bean>
+
+	<bean id="gmTransactionManager"
+		class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+		<property name="sessionFactory">
+			<ref local="gmSessionFactory" />
+		</property>
+		<property name="nestedTransactionAllowed" value="true" />
+	</bean>
+
+	<tx:advice id="gmTxAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			<tx:method name="save*" propagation="REQUIRED" read-only="false" />
+			<tx:method name="delete*" propagation="REQUIRED" read-only="false" />
+			<tx:method name="update*" propagation="REQUIRED" read-only="false" />
+			<tx:method name="remove*" propagation="REQUIRED" read-only="false" />
+			<tx:method name="add*" propagation="REQUIRED" read-only="false" />
+			<tx:method name="create" propagation="REQUIRED" read-only="false" />
+			<tx:method name="deal" propagation="REQUIRED" read-only="false" />
+			<tx:method name="batch*" propagation="REQUIRED" read-only="false" />
+			<tx:method name="submit*" propagation="REQUIRED" read-only="false" />
+			<tx:method name="execute*" propagation="REQUIRED" read-only="false" />
+			<tx:method name="*"  propagation="REQUIRED" read-only="true" />
+		</tx:attributes>
+	</tx:advice>
+</beans>

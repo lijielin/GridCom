@@ -1,0 +1,74 @@
+apply plugin: 'java'
+apply plugin: 'eclipse'
+
+sourceCompatibility = 1.8
+version = '1.0'
+jar {
+    manifest {
+        attributes 'Implementation-Title': 'Gradle Quickstart',
+                   'Implementation-Version': version
+    }
+}
+[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+repositories {
+   maven{
+   	 url 'http://218.244.142.154:9090/nexus/content/groups/public'
+   }
+  }
+task copyJars(type: Copy) {
+  from configurations.runtime
+  into 'd:/tmp/transjars' 
+}
+dependencies {
+     compile("commons-collections:commons-collections:3.2",
+			"commons-fileupload:commons-fileupload:1.3.1",
+			'org.apache.commons:commons-dbcp2:2.1.1',
+			"org.slf4j:slf4j-api:1.7.12",
+			"org.slf4j:slf4j-log4j12:1.7.12",
+			"org.springframework:spring-context:4.2.0.RELEASE",
+			"org.springframework:spring-context-support:4.2.0.RELEASE",
+			"org.springframework:spring-orm:4.2.0.RELEASE",
+			'org.springframework:spring-jms:4.2.0.RELEASE',
+			"commons-io:commons-io:2.4",
+			"com.mchange:c3p0:0.9.5.1",
+			"org.aspectj:aspectjweaver:1.6.11",
+			"commons-collections:commons-collections:3.1",
+			"antlr:antlr:2.7.6",
+			"net.sf.ehcache:ehcache:2.9.1",
+			"commons-lang:commons-lang:2.6",
+			"mysql:mysql-connector-java:5.1.36",
+			"org.apache.logging.log4j:log4j-core:2.3",
+			"com.fasterxml.jackson.core:jackson-core:2.6.1",
+			"com.fasterxml.jackson.core:jackson-databind:2.6.1",
+			"org.springframework.data:spring-data-mongodb:1.7.0.RELEASE",
+			'org.springframework:spring-test:4.2.0.RELEASE',
+			'commons-beanutils:commons-beanutils:1.9.2',
+			'junit:junit:4.+',
+			"itc-base:itc-base:27",
+			"net.sf.ehcache:ehcache:2.9.1",
+			"org.hibernate:hibernate-commons-annotations:3.2.0.Final",
+			"org.hibernate:hibernate-core:4.3.11.Final",
+			"org.hibernate:hibernate-ehcache:4.3.11.Final",
+			'javax.jms:jms:1.1',
+			'org.apache.activemq:activemq-client:5.12.1',
+			'org.apache.activemq:activemq-broker:5.12.1',
+			'org.apache.activemq:activemq-spring:5.12.1',
+			"com.fasterxml.jackson.core:jackson-core:2.6.1",
+			"com.fasterxml.jackson.core:jackson-databind:2.6.1",
+			"org.apache.ant:ant:1.9.6"
+			)
+			
+    testCompile group: 'junit', name: 'junit', version: '4.+'
+}
+
+test {
+    systemProperties 'property': 'value'
+}
+
+uploadArchives {
+    repositories {
+       flatDir {
+           dirs 'repos'
+       }
+    }
+}

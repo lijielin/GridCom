@@ -1,0 +1,35 @@
+package com.inc.gtc;
+
+import com.inc.gm.process.TrackProcessor;
+import com.inc.yun.context.BeanFactory;
+
+public class Test {
+
+	public Test() {
+		// TODO Auto-generated constructor stub
+	}
+
+	public static void main(String[] args) {
+		try
+		{
+	/*		ConfigLoader loader = (ConfigLoader)BeanFactory.getInstance().getBean(ConfigLoader.class);
+			loader.initialize();
+			MigrateService ms = (MigrateService)BeanFactory.getInstance().getBean(MigrateService.class);
+			ms.migrateDistrict("fairy");*/
+				/*TaskExecutor executor = (TaskExecutor)BeanFactory.getInstance().getBean("taskExecutor");
+				SysTask task  = new SysTask();
+				task.setUnit_id(4);
+				executor.executeTask(task);*/
+			//System.out.println(Calendar.getInstance().getTimeInMillis());
+			TrackProcessor processor = (TrackProcessor)BeanFactory.getInstance().getBean("trackProcessor");
+			processor.initialize();	
+			processor.start();
+			//System.out.println(GeoUtils.distance(107.45074166666667d, 29.796213333333338d,107.11345000000001d, 29.73624333333333d));
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
+
+}

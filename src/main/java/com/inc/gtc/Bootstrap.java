@@ -1,0 +1,40 @@
+package com.inc.gtc;
+
+import org.apache.log4j.Logger;
+
+import com.inc.yun.context.BeanFactory;
+import com.inc.yun.core.engin.Controller;
+import com.inc.yun.core.engin.ControllerImpl;
+
+public class Bootstrap {
+	private static final Logger log = Logger.getLogger(Bootstrap.class);
+	
+	private static Controller engine;	
+	/**
+	 * @param args
+	 * @throws SchedulerException 
+	 */
+	public static void main(String[] args)  {
+		log.info("start GirdWeb Media Transform   build at 2015-11");
+	
+		engine = (Controller)BeanFactory.getInstance().getBean("gtcController");
+		
+		Runtime.getRuntime().addShutdownHook(new Thread()
+			{
+				public void run()
+				{
+					try
+					{
+						engine.close();
+					}
+					catch (Exception e)
+					{
+						e.printStackTrace();
+					}
+				}
+			});
+		engine.init();
+		engine.run();
+	
+	}
+}
